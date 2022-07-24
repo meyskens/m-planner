@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_PASSWORD: "planner"
+    volumes:
+      - postgresdb:/var/lib/postgresql/data
+    networks:
+      - planner
+
+  planner:
+    depends_on:
+      - postgres
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      PLANNER_POSTGRES_HOST: postgres
+      PLANNER_POSTGRES_USERNAME: postgres
+      PLANNER_POSTGRES_PASSWORD: planner
+      PLANNER_POSTGRES_DATABASE: postgres
+    networks:
+      - planner
+volumes:
+  postgresdb: {}
+networks:
+  planner: {}
