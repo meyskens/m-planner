@@ -32,6 +32,7 @@ func (id *IdeasCommands) registerCommand(s *discordgo.Session, i *discordgo.Inte
 
 	dbIdea := db.Idea{
 		User:        i.Member.User.ID,
+		ChannelID:   i.ChannelID,
 		Description: idea,
 	}
 
@@ -95,7 +96,8 @@ func (id *IdeasCommands) deleteCommand(s *discordgo.Session, i *discordgo.Intera
 	}
 
 	dbIdea := db.Idea{
-		User: i.Member.User.ID,
+		User:      i.Member.User.ID,
+		ChannelID: i.ChannelID,
 	}
 
 	dbIdea.ID = uint(idInt)

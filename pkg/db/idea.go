@@ -8,4 +8,5 @@ type Idea struct {
 	gorm.Model
 	User        string
 	Description string
+	ChannelID   string
 }

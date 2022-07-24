@@ -25,7 +25,8 @@ func (id *IdeasCommands) listCommand(s *discordgo.Session, i *discordgo.Interact
 func (id *IdeasCommands) listCommandInternal(s *discordgo.Session, i *discordgo.InteractionCreate, typeResponse discordgo.InteractionResponseType, start int) {
 	ideas := []db.Idea{}
 	if tx := id.db.Where(&db.Idea{
-		User: i.Member.User.ID,
+		User:      i.Member.User.ID,
+		ChannelID: i.ChannelID,
 	}).Find(&ideas); tx.Error != nil {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
