@@ -18,7 +18,7 @@ RUN export GOARM=6 && \
 
 FROM alpine:3.13
 
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates tzdata
 
 RUN mkdir -p /go/src/github.com/meyskens/m-planner
 WORKDIR /go/src/github.com/meyskens/m-planner
