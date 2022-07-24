@@ -26,3 +26,4 @@ WORKDIR /go/src/github.com/meyskens/m-planner
 COPY --from=build /go/src/github.com/meyskens/m-planner/planner /usr/local/bin/
 
 ENTRYPOINT [ "/usr/local/bin/planner" ]
+CMD [ "bot" ]
