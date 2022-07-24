@@ -15,6 +15,8 @@ import (
 var tables = []interface{}{
 	Idea{},
 	Daily{},
+	DailyReminder{},
+	DailyReminderEvent{},
 }
 
 type Validatable interface {

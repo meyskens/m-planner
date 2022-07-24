@@ -13,6 +13,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meyskens/m-planner/pkg/command"
+	"github.com/meyskens/m-planner/pkg/commands/daily"
 	"github.com/meyskens/m-planner/pkg/commands/ideas"
 	"github.com/meyskens/m-planner/pkg/db"
 	"github.com/spf13/cobra"
@@ -141,6 +142,7 @@ func (s *serveCmdOptions) RunE(cmd *cobra.Command, args []string) error {
 func (s *serveCmdOptions) RegisterHandlers() {
 	s.handlers = []command.Interface{
 		ideas.NewCommands(s.db),
+		daily.NewCommands(s.db),
 	}
 
 	for _, handler := range s.handlers {
@@ -160,6 +162,15 @@ func (s *serveCmdOptions) onInteractionCreate(sess *discordgo.Session, i *discor
 	if i.Type == discordgo.InteractionMessageComponent {
 		// what we're doing here is allowing the app to set a custom ID after -- to pass along hidden values like an ID
 		name := strings.Split(i.MessageComponentData().CustomID, "--")[0]
+		for _, handler := range s.onInteractionCreateHandler[name] {
+			handler(sess, i)
+		}
+	}
+
+	if i.Type == discordgo.InteractionModalSubmit {
+		data := i.ModalSubmitData()
+		// what we're doing here is allowing the app to set a custom ID after -- to pass along hidden values like an ID
+		name := strings.Split(data.CustomID, "--")[0]
 		for _, handler := range s.onInteractionCreateHandler[name] {
 			handler(sess, i)
 		}
