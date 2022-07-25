@@ -135,7 +135,7 @@ func (d *DailyCommands) remindEvents(dg *discordgo.Session) {
 					log.Printf("error deleting daily reminder event: %s", tx.Error)
 				}
 			} else {
-				event.SnoozedTill = time.Now().Add(10 * time.Minute)
+				event.SnoozedTill = time.Now().Truncate(time.Minute).Add(10 * time.Minute)
 				if tx := d.db.Save(&event); tx.Error != nil {
 					log.Printf("error deleting daily reminder event: %s", tx.Error)
 				}
