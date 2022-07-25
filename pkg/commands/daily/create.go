@@ -171,7 +171,7 @@ func (id *DailyCommands) changeCommand(s *discordgo.Session, i *discordgo.Intera
 							CustomID:  "weekdays",
 							Label:     "What time should I remind you on weekdays?",
 							Style:     discordgo.TextInputShort,
-							Value:     fmt.Sprintf("%d:%d", wHour, wMin),
+							Value:     fmt.Sprintf("%02d:%02d", wHour, wMin),
 							Required:  true,
 							MaxLength: 5,
 							MinLength: 1,
@@ -183,7 +183,7 @@ func (id *DailyCommands) changeCommand(s *discordgo.Session, i *discordgo.Intera
 						discordgo.TextInput{
 							CustomID:  "weekends",
 							Label:     "What time should I remind you on weekends?",
-							Value:     fmt.Sprintf("%d:%d", weHour, weMin),
+							Value:     fmt.Sprintf("%02d:%02d", weHour, weMin),
 							Style:     discordgo.TextInputShort,
 							Required:  true,
 							MaxLength: 5,
