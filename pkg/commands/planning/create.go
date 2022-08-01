@@ -289,5 +289,5 @@ func parseTime(timeStr string) time.Time {
 
 	t, _ = naturaldate.Parse(timeStr, time.Now().In(loc), naturaldate.WithDirection(naturaldate.Future))
 
-	return t.In(loc)
+	return t.In(loc).Truncate(time.Minute)
 }
