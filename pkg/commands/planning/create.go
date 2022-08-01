@@ -269,8 +269,13 @@ func (p *PlanningCommands) modalReturnCommand(s *discordgo.Session, i *discordgo
 }
 
 func parseTime(timeStr string) time.Time {
+	// is it from the edit?
+	t, err := time.Parse("2006-01-02 15:04", timeStr)
+	if err == nil && !t.IsZero() {
+		return t
+	}
 	// is it RFC850?
-	t, err := time.Parse(time.RFC850, timeStr)
+	t, err = time.Parse(time.RFC850, timeStr)
 	if err == nil && !t.IsZero() {
 		return t
 	}
