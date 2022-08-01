@@ -120,7 +120,7 @@ func (p *PlanningCommands) listCommandInternal(s *discordgo.Session, i *discordg
 		discordgo.ActionsRow{
 			Components: []discordgo.MessageComponent{
 				discordgo.SelectMenu{
-					Placeholder: "Select a daily to edit",
+					Placeholder: "Select a plan to edit",
 					MaxValues:   1,
 					Options:     editors,
 					CustomID:    "planning_edit_list",
