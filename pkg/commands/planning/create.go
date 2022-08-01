@@ -269,8 +269,13 @@ func (p *PlanningCommands) modalReturnCommand(s *discordgo.Session, i *discordgo
 }
 
 func parseTime(timeStr string) time.Time {
-	t, _ := naturaldate.Parse(timeStr, time.Now(), naturaldate.WithDirection(naturaldate.Future))
+	// is it RFC850?
+	t, err := time.Parse(time.RFC850, timeStr)
+	if err == nil && !t.IsZero() {
+		return t
+	}
+	brussesls := time.FixedZone("Europe/Brussels", 0)
+	t, _ = naturaldate.Parse(timeStr, time.Now().In(brussesls), naturaldate.WithDirection(naturaldate.Future))
 
-	// get brussels timezone
-	return t.In(time.FixedZone("Europe/Brussels", 0))
+	return t.In(brussesls)
 }
