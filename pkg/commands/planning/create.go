@@ -269,6 +269,8 @@ func (p *PlanningCommands) modalReturnCommand(s *discordgo.Session, i *discordgo
 }
 
 func parseTime(timeStr string) time.Time {
+	loc, _ := time.LoadLocation("Europe/Brussels")
+
 	// is it from the edit?
 	t, err := time.Parse("2006-01-02 15:04", timeStr)
 	if err == nil && !t.IsZero() {
@@ -279,8 +281,8 @@ func parseTime(timeStr string) time.Time {
 	if err == nil && !t.IsZero() {
 		return t
 	}
-	brussesls := time.FixedZone("Europe/Brussels", 0)
-	t, _ = naturaldate.Parse(timeStr, time.Now().In(brussesls), naturaldate.WithDirection(naturaldate.Future))
 
-	return t.In(brussesls)
+	t, _ = naturaldate.Parse(timeStr, time.Now().In(loc), naturaldate.WithDirection(naturaldate.Future))
+
+	return t.In(loc)
 }
