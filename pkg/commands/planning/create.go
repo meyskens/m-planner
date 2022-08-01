@@ -60,10 +60,12 @@ func (p *PlanningCommands) registerCommand(s *discordgo.Session, i *discordgo.In
 		})
 	}
 
+	loc, _ := time.LoadLocation("Europe/Brussels")
+
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: fmt.Sprintf("I will remind you about %q at %s", desc, t.Format(time.RFC850)),
+			Content: fmt.Sprintf("I will remind you about %q at %s", desc, t.In(loc).Format(time.RFC850)),
 			Components: []discordgo.MessageComponent{
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
@@ -136,6 +138,8 @@ func (p *PlanningCommands) changeCommand(s *discordgo.Session, i *discordgo.Inte
 		annoying = "yes"
 	}
 
+	loc, _ := time.LoadLocation("Europe/Brussels")
+
 	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseModal,
 		Data: &discordgo.InteractionResponseData{
@@ -160,7 +164,7 @@ func (p *PlanningCommands) changeCommand(s *discordgo.Session, i *discordgo.Inte
 							CustomID:  "Time",
 							Label:     "What time should I remind you?",
 							Style:     discordgo.TextInputShort,
-							Value:     dbPlan.Start.Format("2006-01-02 15:04"),
+							Value:     dbPlan.Start.In(loc).Format("2006-01-02 15:04"),
 							Required:  true,
 							MinLength: 1,
 						},
@@ -189,6 +193,7 @@ func (p *PlanningCommands) changeCommand(s *discordgo.Session, i *discordgo.Inte
 }
 
 func (p *PlanningCommands) modalReturnCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	loc, _ := time.LoadLocation("Europe/Brussels")
 	data := i.ModalSubmitData()
 	if !strings.HasPrefix(data.CustomID, "modal_change_planning--") {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -243,7 +248,7 @@ func (p *PlanningCommands) modalReturnCommand(s *discordgo.Session, i *discordgo
 	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: fmt.Sprintf("I will remind you about %q at %s", dbPlan.Description, dbPlan.Start.Format(time.RFC850)),
+			Content: fmt.Sprintf("I will remind you about %q at %s", dbPlan.Description, dbPlan.Start.In(loc).Format(time.RFC850)),
 			Components: []discordgo.MessageComponent{
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
@@ -272,7 +277,7 @@ func parseTime(timeStr string) time.Time {
 	loc, _ := time.LoadLocation("Europe/Brussels")
 
 	// is it from the edit?
-	t, err := time.Parse("2006-01-02 15:04", timeStr)
+	t, err := time.ParseInLocation("2006-01-02 15:04", timeStr, loc)
 	if err == nil && !t.IsZero() {
 		return t
 	}
