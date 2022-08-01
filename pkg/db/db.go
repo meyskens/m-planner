@@ -17,6 +17,7 @@ var tables = []interface{}{
 	Daily{},
 	DailyReminder{},
 	DailyReminderEvent{},
+	Plan{},
 }
 
 type Validatable interface {
