@@ -46,13 +46,15 @@ func (p *PlanningCommands) listCommandInternal(s *discordgo.Session, i *discordg
 		return
 	}
 
+	loc, _ := time.LoadLocation("Europe/Brussels")
+
 	embeds := []*discordgo.MessageEmbed{}
 	deleters := []discordgo.SelectMenuOption{}
 	editors := []discordgo.SelectMenuOption{}
 	for _, daily := range plans {
 		e := embed.NewEmbed()
 		e.AddField("Description", daily.Description)
-		e.AddField("When", daily.Start.Format(time.RFC850))
+		e.AddField("When", daily.Start.In(loc).Format(time.RFC850))
 		if daily.Annoying {
 			e.AddField("Should I annoy you?", "YEEES")
 		} else {
