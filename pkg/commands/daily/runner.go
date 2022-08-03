@@ -71,7 +71,7 @@ func (d *DailyCommands) remindEvents(dg *discordgo.Session) {
 	}
 
 	for _, event := range events {
-		if time.Now().After(event.Start) {
+		if time.Now().After(event.SnoozedTill) {
 			snoozer := discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.SelectMenu{
