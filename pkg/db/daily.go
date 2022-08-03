@@ -32,4 +32,12 @@ type DailyReminderEvent struct {
 	Daily       Daily
 	Start       time.Time
 	SnoozedTill time.Time
+
+	SentMessages []SentMessage
+}
+
+type SentMessage struct {
+	gorm.Model
+	DailyReminderEventID uint
+	MessageID            string
 }

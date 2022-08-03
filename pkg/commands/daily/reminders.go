@@ -9,6 +9,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meyskens/m-planner/pkg/db"
+	"gorm.io/gorm/clause"
 )
 
 func (d *DailyCommands) markEventComplete(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -34,7 +35,8 @@ func (d *DailyCommands) markEventComplete(s *discordgo.Session, i *discordgo.Int
 	}
 
 	dbEvent := db.DailyReminderEvent{}
-	dbEvent.ID = uint(idInt)
+
+	d.db.Preload(clause.Associations).Where("id = ?", idInt).Find(&dbEvent)
 
 	if tx := d.db.Delete(&dbEvent); tx.Error != nil {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
@@ -52,6 +54,16 @@ func (d *DailyCommands) markEventComplete(s *discordgo.Session, i *discordgo.Int
 			Components: []discordgo.MessageComponent{},
 		},
 	})
+
+	go func() {
+		for _, msg := range dbEvent.SentMessages {
+			if msg.MessageID != i.Message.ID {
+				s.ChannelMessageDelete(i.ChannelID, msg.MessageID)
+			}
+			d.db.Unscoped().Delete(&msg)
+			time.Sleep(time.Millisecond * 400)
+		}
+	}()
 }
 
 func (id *DailyCommands) snoozeEvent(s *discordgo.Session, i *discordgo.InteractionCreate) {

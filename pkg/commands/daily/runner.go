@@ -71,7 +71,7 @@ func (d *DailyCommands) remindEvents(dg *discordgo.Session) {
 	}
 
 	for _, event := range events {
-		if time.Now().After(event.SnoozedTill) {
+		if time.Now().After(event.Start) {
 			snoozer := discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.SelectMenu{
@@ -121,13 +121,20 @@ func (d *DailyCommands) remindEvents(dg *discordgo.Session) {
 			if event.Daily.Annoying {
 				components = append(components, snoozer)
 			}
-			_, err := dg.ChannelMessageSendComplex(event.Daily.ChannelID, &discordgo.MessageSend{
+			msg, err := dg.ChannelMessageSendComplex(event.Daily.ChannelID, &discordgo.MessageSend{
 				Content:    fmt.Sprintf("<@%s> don't forget to %s", event.Daily.User, event.Daily.Description),
 				Components: components,
 			})
 
 			if err != nil {
 				fmt.Println(err)
+			} else {
+				if tx := d.db.Save(&db.SentMessage{
+					DailyReminderEventID: event.ID,
+					MessageID:            msg.ID,
+				}); tx.Error != nil {
+					log.Printf("error saving sent message ID: %s", tx.Error)
+				}
 			}
 
 			if !event.Daily.Annoying {
