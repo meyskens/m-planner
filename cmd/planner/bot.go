@@ -16,6 +16,7 @@ import (
 	"github.com/meyskens/m-planner/pkg/commands/daily"
 	"github.com/meyskens/m-planner/pkg/commands/ideas"
 	"github.com/meyskens/m-planner/pkg/commands/planning"
+	"github.com/meyskens/m-planner/pkg/commands/recycle"
 	"github.com/meyskens/m-planner/pkg/db"
 	"github.com/spf13/cobra"
 )
@@ -36,6 +37,8 @@ type serveCmdOptions struct {
 	postgresDatabase string
 	postgresPassword string
 	enableSSL        bool
+
+	recycleSecret string
 
 	onInteractionCreateHandler map[string][]func(*discordgo.Session, *discordgo.InteractionCreate)
 }
@@ -60,6 +63,7 @@ func NewServeCmd() *cobra.Command {
 	c.Flags().StringVar(&s.postgresPassword, "postgres-password", "", "PostgreSQL hostname")
 	c.Flags().StringVar(&s.postgresDatabase, "postgres-database", "", "PostgreSQL hostname")
 	c.Flags().BoolVar(&s.enableSSL, "postgres-enable-ssl", false, "PostgreSQL to use TLS")
+	c.Flags().StringVar(&s.recycleSecret, "recycle-secret", "", "Recycle secret")
 	c.MarkFlagRequired("jwt-secret")
 	c.MarkFlagRequired("postgres-host")
 	c.MarkFlagRequired("postgres-username")
@@ -145,6 +149,7 @@ func (s *serveCmdOptions) RegisterHandlers() {
 		ideas.NewCommands(s.db),
 		daily.NewCommands(s.db),
 		planning.NewCommands(s.db),
+		recycle.NewCommands(s.db, s.recycleSecret),
 	}
 
 	for _, handler := range s.handlers {
