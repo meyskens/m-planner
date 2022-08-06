@@ -38,14 +38,7 @@ func (d *DailyCommands) markEventComplete(s *discordgo.Session, i *discordgo.Int
 
 	d.db.Preload(clause.Associations).Where("id = ?", idInt).Find(&dbEvent)
 
-	if tx := d.db.Delete(&dbEvent); tx.Error != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: fmt.Sprintf("Sorry friend, i got a database error %q :(", tx.Error),
-			},
-		})
-	}
+	d.db.Delete(&dbEvent) // could already have been deleded, still friends in that case!
 
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
