@@ -36,14 +36,7 @@ func (p *PlanningCommands) markPlanningComplete(s *discordgo.Session, i *discord
 	dbPlan := db.Plan{}
 	dbPlan.ID = uint(idInt)
 
-	if tx := p.db.Delete(&dbPlan); tx.Error != nil {
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: fmt.Sprintf("Sorry friend, i got a database error %q :(", tx.Error),
-			},
-		})
-	}
+	p.db.Delete(&dbPlan)
 
 	if dbPlan.User == "161504618017325057" {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
