@@ -66,7 +66,7 @@ func (p *PlanningCommands) markPlanningComplete(s *discordgo.Session, i *discord
 }
 
 func (id *PlanningCommands) snoozePlanning(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	if !strings.HasPrefix(i.MessageComponentData().CustomID, "snooze_event--") {
+	if !strings.HasPrefix(i.MessageComponentData().CustomID, "snooze_planning--") {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseUpdateMessage,
 			Data: &discordgo.InteractionResponseData{
