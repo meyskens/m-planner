@@ -35,6 +35,13 @@ func (r *RecycleCommands) createRemindEvents(now time.Time, dg *discordgo.Sessio
 
 	for _, plan := range recycles {
 		if time.Now().After(plan.LastRun.Add(24 * time.Hour).Truncate(24 * time.Hour)) {
+			plan.LastRun = time.Now()
+
+			if tx := r.db.Save(&plan); tx.Error != nil {
+				log.Printf("[recycle] error saving recycle plan: %s", tx.Error)
+				continue
+			}
+
 			api := recyclebelgium.NewAPI(r.xSecret)
 
 			collections, _ := api.GetCollections(plan.PostalCodeID, plan.StreetID, plan.HouseNumber, time.Now().Add(24*time.Hour), time.Now().Add(24*time.Hour), 100)
