@@ -148,9 +148,25 @@ func (d *DailyCommands) remindEvents(dg *discordgo.Session) {
 				}
 
 				if time.Now().Add(-8 * time.Hour).After(event.Start) {
-					dg.ChannelMessageSend(event.Daily.ChannelID, fmt.Sprintf("<@%s> i have been trying to get you to %q for 8 hours now... FUCK OFF", event.Daily.User, event.Daily.Description))
+					msg, err := dg.ChannelMessageSend(event.Daily.ChannelID, fmt.Sprintf("<@%s> i have been trying to get you to %q for 8 hours now... FUCK OFF", event.Daily.User, event.Daily.Description))
+					if err == nil {
+						if tx := d.db.Save(&db.SentMessage{
+							DailyReminderEventID: event.ID,
+							MessageID:            msg.ID,
+						}); tx.Error != nil {
+							log.Printf("error saving sent message ID: %s", tx.Error)
+						}
+					}
 				} else if time.Now().Add(-4 * time.Hour).After(event.Start) {
-					dg.ChannelMessageSend(event.Daily.ChannelID, fmt.Sprintf("<@%s> i have been trying to get you to %q for 4 hours now... please...", event.Daily.User, event.Daily.Description))
+					msg, err := dg.ChannelMessageSend(event.Daily.ChannelID, fmt.Sprintf("<@%s> i have been trying to get you to %q for 4 hours now... please...", event.Daily.User, event.Daily.Description))
+					if err == nil {
+						if tx := d.db.Save(&db.SentMessage{
+							DailyReminderEventID: event.ID,
+							MessageID:            msg.ID,
+						}); tx.Error != nil {
+							log.Printf("error saving sent message ID: %s", tx.Error)
+						}
+					}
 				}
 			}
 		}
