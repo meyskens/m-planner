@@ -100,10 +100,10 @@ func (id *PlanningCommands) snoozePlanning(s *discordgo.Session, i *discordgo.In
 		return
 	}
 
-	dbEvent := db.DailyReminderEvent{}
-	dbEvent.ID = uint(idInt)
+	dbPlan := db.Plan{}
+	dbPlan.ID = uint(idInt)
 
-	if tx := id.db.Find(&dbEvent); tx.Error != nil {
+	if tx := id.db.Find(&dbPlan); tx.Error != nil {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
@@ -113,9 +113,9 @@ func (id *PlanningCommands) snoozePlanning(s *discordgo.Session, i *discordgo.In
 		return
 	}
 
-	dbEvent.SnoozedTill = dbEvent.SnoozedTill.Add(time.Duration(valueInt) * time.Minute)
+	dbPlan.SnoozedTill = dbPlan.SnoozedTill.Add(time.Duration(valueInt) * time.Minute)
 
-	if tx := id.db.Save(&dbEvent); tx.Error != nil {
+	if tx := id.db.Save(&dbPlan); tx.Error != nil {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
