@@ -13,6 +13,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meyskens/m-planner/pkg/command"
+	"github.com/meyskens/m-planner/pkg/commands/calendar"
 	"github.com/meyskens/m-planner/pkg/commands/daily"
 	"github.com/meyskens/m-planner/pkg/commands/ideas"
 	"github.com/meyskens/m-planner/pkg/commands/planning"
@@ -152,6 +153,7 @@ func (s *serveCmdOptions) RegisterHandlers() {
 		planning.NewCommands(s.db),
 		recycle.NewCommands(s.db, s.recycleSecret),
 		token.NewCommands(s.db),
+		calendar.NewCommands(s.db),
 	}
 
 	for _, handler := range s.handlers {

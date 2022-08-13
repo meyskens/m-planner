@@ -3,6 +3,7 @@ module github.com/meyskens/m-planner
 go 1.14
 
 require (
+	github.com/arran4/golang-ical v0.0.0-20220517104411-fd89fefb0182 // indirect
 	github.com/bwmarrin/discordgo v0.25.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b

@@ -21,6 +21,7 @@ var tables = []interface{}{
 	SentMessage{},
 	RecycleReminder{},
 	ApiToken{},
+	Calendar{},
 }
 
 type Validatable interface {
