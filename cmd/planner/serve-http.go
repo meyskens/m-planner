@@ -9,6 +9,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/meyskens/m-planner/pkg/api/tiny"
 	"github.com/meyskens/m-planner/pkg/db"
 	"github.com/spf13/cobra"
 )
@@ -92,6 +93,8 @@ func (s *serveHTTPCmdOptions) RunE(cmd *cobra.Command, args []string) error {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "M-Planner API endpoint")
 	})
+
+	tiny.NewHTTPHandler().Register(e, s.db)
 
 	go func() {
 		e.Start(fmt.Sprintf("%s:%d", s.BindAddr, s.Port))
