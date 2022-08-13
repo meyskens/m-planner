@@ -17,6 +17,7 @@ import (
 	"github.com/meyskens/m-planner/pkg/commands/ideas"
 	"github.com/meyskens/m-planner/pkg/commands/planning"
 	"github.com/meyskens/m-planner/pkg/commands/recycle"
+	"github.com/meyskens/m-planner/pkg/commands/token"
 	"github.com/meyskens/m-planner/pkg/db"
 	"github.com/spf13/cobra"
 )
@@ -150,6 +151,7 @@ func (s *serveCmdOptions) RegisterHandlers() {
 		daily.NewCommands(s.db),
 		planning.NewCommands(s.db),
 		recycle.NewCommands(s.db, s.recycleSecret),
+		token.NewCommands(s.db),
 	}
 
 	for _, handler := range s.handlers {
