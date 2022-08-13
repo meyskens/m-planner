@@ -20,6 +20,7 @@ var tables = []interface{}{
 	Plan{},
 	SentMessage{},
 	RecycleReminder{},
+	ApiToken{},
 }
 
 type Validatable interface {
