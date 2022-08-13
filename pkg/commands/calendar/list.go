@@ -174,7 +174,7 @@ func (c *CalendarCommands) listCommandInternal(s *discordgo.Session, i *discordg
 		Type: typeResponse,
 		Data: &discordgo.InteractionResponseData{
 			Embeds:     embeds,
-			Content:    "Here are is your calendar",
+			Content:    "Here are is your calendar for the next 24 hours",
 			Components: comps,
 		},
 	})
