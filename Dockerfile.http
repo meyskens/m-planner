@@ -3,4 +3,4 @@ FROM $SOURCE
 
 
 ENTRYPOINT [ "/usr/local/bin/planner" ]
-CMD [ "serve" ]
+CMD [ "serve", "--port", "80" ]
