@@ -25,3 +25,5 @@ jobs:
 
       - name: Build the main Docker image
         run: docker buildx build . --file Dockerfile --tag registry.dispatch.sh/maartje/mplanner-bot:$GITHUB_SHA --push --platform "linux/amd64,linux/arm64,linux/arm"
+      - name: Build the http server Docker image
+        run: docker buildx build . --build-arg=SOURCE=registry.dispatch.sh/maartje/mplanner-bot:$GITHUB_SHA --file Dockerfile.http --tag registry.dispatch.sh/maartje/mplanner-http:$GITHUB_SHA --push --platform "linux/amd64,linux/arm64,linux/arm"

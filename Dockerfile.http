@@ -1,0 +1,6 @@
+ARG SOURCE
+FROM $SOURCE
+
+
+ENTRYPOINT [ "/usr/local/bin/planner" ]
+CMD [ "serve" ]
