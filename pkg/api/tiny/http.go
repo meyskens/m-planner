@@ -93,8 +93,8 @@ func (h *HTTPHandler) getTasks(c echo.Context) error {
 	for _, daily := range dailys {
 		// if starts today and is in the future add it
 		for _, reminder := range daily.Reminders {
-			reminders := []db.DailyReminder{}
-			h.db.Where(&db.DailyReminder{
+			reminders := []db.DailyReminderEvent{}
+			h.db.Where(&db.DailyReminderEvent{
 				DailyID: daily.ID,
 			}).Find(&reminders)
 
