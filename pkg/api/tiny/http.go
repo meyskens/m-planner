@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -56,6 +57,7 @@ func (h *HTTPHandler) Register(e *echo.Echo, dbConn *db.Connection) {
 
 	e.GET("/tiny/tasks", h.getTasks)
 	e.GET("/tiny/calendar", h.getCalendar)
+	e.GET("/tiny/ideas/:channel", h.getIdeas)
 
 }
 
@@ -124,6 +126,12 @@ func (h *HTTPHandler) getTasks(c echo.Context) error {
 		return tasks[i].Time < tasks[j].Time
 	})
 
+	// limit to limit parameter
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+	if limit > 0 && len(tasks) > limit {
+		tasks = tasks[:limit]
+	}
+
 	return c.JSON(http.StatusOK, tasks)
 }
 
@@ -178,5 +186,41 @@ func (h *HTTPHandler) getCalendar(c echo.Context) error {
 		return e[i].Start < e[j].Start
 	})
 
+	// limit to limit parameter
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+	if limit > 0 && len(e) > limit {
+		e = e[:limit]
+	}
+
 	return c.JSON(http.StatusOK, e)
+}
+
+type TinyIdea struct {
+	Name string `json:"name"`
+}
+
+func (h *HTTPHandler) getIdeas(c echo.Context) error {
+	ideas := []db.Idea{}
+	if err := h.db.Preload(clause.Associations).Where(&db.Idea{
+		User:      c.Get("user").(string),
+		ChannelID: c.Param("channel"),
+	}).Find(&ideas).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "could not get ideas"})
+	}
+
+	i := []TinyIdea{}
+
+	for _, idea := range ideas {
+		i = append(i, TinyIdea{
+			Name: idea.Description,
+		})
+	}
+
+	// limit to limit parameter
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+	if limit > 0 && len(i) > limit {
+		i = i[:limit]
+	}
+
+	return c.JSON(http.StatusOK, i)
 }
