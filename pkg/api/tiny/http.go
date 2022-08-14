@@ -64,6 +64,8 @@ type TinyTask struct {
 }
 
 func (h *HTTPHandler) getTasks(c echo.Context) error {
+	loc, _ := time.LoadLocation("Europe/Brussels")
+
 	user := c.Get("user").(string)
 	plans := []db.Plan{}
 	if err := h.db.Where(&db.Plan{
@@ -84,7 +86,7 @@ func (h *HTTPHandler) getTasks(c echo.Context) error {
 		if plan.Start.After(time.Now()) && plan.Start.Before(time.Now().Truncate(24*time.Hour).Add(time.Hour*24)) {
 			tasks = append(tasks, TinyTask{
 				Name:      plan.Description,
-				Time:      plan.Start.Format("15:04"),
+				Time:      plan.Start.In(loc).Format("15:04"),
 				IsInAlert: !plan.SnoozedTill.IsZero(),
 			})
 		}
@@ -102,8 +104,8 @@ func (h *HTTPHandler) getTasks(c echo.Context) error {
 				continue
 			}
 
-			if reminder.Hour >= time.Now().Hour() || len(reminders) > 0 {
-				if reminder.Hour == time.Now().Hour() && reminder.Minute < time.Now().Minute() && len(reminders) == 0 {
+			if reminder.Hour >= time.Now().In(loc).Hour() || len(reminders) > 0 {
+				if reminder.Hour == time.Now().In(loc).Hour() && reminder.Minute < time.Now().In(loc).Minute() && len(reminders) == 0 {
 					continue
 				}
 
@@ -124,7 +126,8 @@ func (h *HTTPHandler) getTasks(c echo.Context) error {
 }
 
 func getCurrentDay() time.Weekday {
-	now := time.Now()
+	loc, _ := time.LoadLocation("Europe/Brussels")
+	now := time.Now().In(loc)
 	currentDay := now.Weekday()
 	// correct to use monday or saturday
 	switch currentDay {
