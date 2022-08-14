@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/meyskens/m-planner/pkg/commands/calendar"
 	"github.com/meyskens/m-planner/pkg/db"
 	"gorm.io/gorm/clause"
 )
@@ -54,6 +55,7 @@ func (h *HTTPHandler) Register(e *echo.Echo, dbConn *db.Connection) {
 	})
 
 	e.GET("/tiny/tasks", h.getTasks)
+	e.GET("/tiny/calendar", h.getCalendar)
 
 }
 
@@ -140,4 +142,41 @@ func getCurrentDay() time.Weekday {
 	}
 
 	return currentDay
+}
+
+type TinyCalendarEvent struct {
+	Name     string `json:"name"`
+	Start    string `json:"start"`
+	Location string `json:"location"`
+}
+
+func (h *HTTPHandler) getCalendar(c echo.Context) error {
+	cals := []db.Calendar{}
+	if err := h.db.Preload(clause.Associations).Where(&db.Calendar{
+		User: c.Get("user").(string),
+	}).Find(&cals).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "could not get calendars"})
+	}
+
+	e := []TinyCalendarEvent{}
+
+	for _, cal := range cals {
+		events, err := calendar.ParseSchedule(cal.Link)
+		if err != nil {
+			continue
+		}
+		for _, event := range events {
+			e = append(e, TinyCalendarEvent{
+				Name:     event.Name,
+				Start:    event.Start.Format("15:04"),
+				Location: event.Location,
+			})
+		}
+	}
+
+	sort.Slice(e, func(i, j int) bool {
+		return e[i].Start < e[j].Start
+	})
+
+	return c.JSON(http.StatusOK, e)
 }
