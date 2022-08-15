@@ -87,7 +87,7 @@ func (h *HTTPHandler) getTasks(c echo.Context) error {
 	tasks := []TinyTask{}
 	for _, plan := range plans {
 		// if starts today and is in the future add it
-		if plan.Start.After(time.Now()) && plan.Start.Before(time.Now().Truncate(24*time.Hour).Add(time.Hour*24)) {
+		if plan.Start.After(time.Now().Truncate(24*time.Hour)) && plan.Start.Before(time.Now().Truncate(24*time.Hour).Add(time.Hour*24)) {
 			tasks = append(tasks, TinyTask{
 				Name:      plan.Description,
 				Time:      plan.Start.In(loc).Format("15:04"),
