@@ -26,7 +26,7 @@ func (id *IdeasCommands) listCommand(s *discordgo.Session, i *discordgo.Interact
 func (id *IdeasCommands) listCommandInternal(s *discordgo.Session, i *discordgo.InteractionCreate, typeResponse discordgo.InteractionResponseType, start int) {
 	print := false
 
-	if len(i.ApplicationCommandData().Options) > 0 {
+	if i.Type == discordgo.InteractionApplicationCommand && len(i.ApplicationCommandData().Options) > 0 {
 		if v, ok := i.ApplicationCommandData().Options[0].Value.(bool); ok {
 			print = v
 		}
