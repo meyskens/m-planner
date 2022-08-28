@@ -48,7 +48,7 @@ func (id *GroceriesCommands) listCommandInternal(s *discordgo.Session, i *discor
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: "You have no ideas left, go outside and think of one!",
+				Content: "You have no items you need right now! You can stay home if you want :)",
 			},
 		})
 		return
