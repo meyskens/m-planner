@@ -237,5 +237,5 @@ func (h *HTTPHandler) getPrintjobs(c echo.Context) error {
 		h.db.Delete(&job) // printed so we delete them
 	}
 
-	return c.JSON(http.StatusOK, pj)
+	return c.JSON(http.StatusOK, echo.Map{"data": pj})
 }
