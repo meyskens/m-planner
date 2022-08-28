@@ -8,6 +8,7 @@ import (
 
 	"github.com/meyskens/m-planner/pkg/db"
 	"github.com/meyskens/m-planner/pkg/embed"
+	printlib "github.com/meyskens/m-planner/pkg/print"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -23,6 +24,14 @@ func (id *IdeasCommands) listCommand(s *discordgo.Session, i *discordgo.Interact
 }
 
 func (id *IdeasCommands) listCommandInternal(s *discordgo.Session, i *discordgo.InteractionCreate, typeResponse discordgo.InteractionResponseType, start int) {
+	print := false
+
+	if len(i.ApplicationCommandData().Options) > 0 {
+		if v, ok := i.ApplicationCommandData().Options[0].Value.(bool); ok {
+			print = v
+		}
+	}
+
 	ideas := []db.Idea{}
 	if tx := id.db.Where(&db.Idea{
 		User:      i.Member.User.ID,
@@ -44,6 +53,30 @@ func (id *IdeasCommands) listCommandInternal(s *discordgo.Session, i *discordgo.
 			},
 		})
 		return
+	}
+
+	if print {
+		pd, err := printlib.PrintIdeaList(i.Member.User.ID, ideas)
+		if err != nil {
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: fmt.Sprintf("Sorry friend, i got a printing error %q :(", err),
+				},
+			})
+			return
+		}
+		for _, pd := range pd {
+			if err := id.db.Create(&pd).Error; err != nil {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: fmt.Sprintf("Sorry friend, i got a database error %q :(", err),
+					},
+				})
+				return
+			}
+		}
 	}
 
 	embeds := []*discordgo.MessageEmbed{}

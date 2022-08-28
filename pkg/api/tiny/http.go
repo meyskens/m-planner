@@ -58,7 +58,7 @@ func (h *HTTPHandler) Register(e *echo.Echo, dbConn *db.Connection) {
 	e.GET("/tiny/tasks", h.getTasks)
 	e.GET("/tiny/calendar", h.getCalendar)
 	e.GET("/tiny/ideas/:channel", h.getIdeas)
-
+	e.GET("/tiny/printjobs", h.getPrintjobs)
 }
 
 type TinyTask struct {
@@ -223,4 +223,19 @@ func (h *HTTPHandler) getIdeas(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, i)
+}
+
+func (h *HTTPHandler) getPrintjobs(c echo.Context) error {
+	pj := []db.PrintJob{}
+	if err := h.db.Preload(clause.Associations).Where(&db.PrintJob{
+		User: c.Get("user").(string),
+	}).Find(&pj).Error; err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "could not get printjobs"})
+	}
+
+	for _, job := range pj {
+		h.db.Delete(&job) // printed so we delete them
+	}
+
+	return c.JSON(http.StatusOK, pj)
 }

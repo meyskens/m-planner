@@ -22,6 +22,7 @@ var tables = []interface{}{
 	RecycleReminder{},
 	ApiToken{},
 	Calendar{},
+	PrintJob{},
 }
 
 type Validatable interface {
