@@ -23,6 +23,7 @@ var tables = []interface{}{
 	ApiToken{},
 	Calendar{},
 	PrintJob{},
+	Grocery{},
 }
 
 type Validatable interface {

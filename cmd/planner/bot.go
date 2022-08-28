@@ -15,6 +15,7 @@ import (
 	"github.com/meyskens/m-planner/pkg/command"
 	"github.com/meyskens/m-planner/pkg/commands/calendar"
 	"github.com/meyskens/m-planner/pkg/commands/daily"
+	"github.com/meyskens/m-planner/pkg/commands/groceries"
 	"github.com/meyskens/m-planner/pkg/commands/ideas"
 	"github.com/meyskens/m-planner/pkg/commands/planning"
 	"github.com/meyskens/m-planner/pkg/commands/recycle"
@@ -154,6 +155,7 @@ func (s *serveCmdOptions) RegisterHandlers() {
 		recycle.NewCommands(s.db, s.recycleSecret),
 		token.NewCommands(s.db),
 		calendar.NewCommands(s.db),
+		groceries.NewCommands(s.db),
 	}
 
 	for _, handler := range s.handlers {

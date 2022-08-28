@@ -2,6 +2,7 @@ package print
 
 import (
 	"bytes"
+	"sort"
 
 	"github.com/mect/go-escpos"
 	"github.com/meyskens/m-planner/pkg/db"
@@ -46,6 +47,48 @@ func PrintIdeaList(user string, ideas []db.Idea) ([]db.PrintJob, error) {
 	for _, idea := range ideas {
 		p.Print("* ")
 		p.PrintLn(idea.Description)
+	}
+
+	p.PrintLn("")
+	p.PrintLn("")
+	p.Size(1, 1)
+	p.PrintLn("Powered by M-Planner")
+
+	return []db.PrintJob{
+		{
+			User:       user,
+			EscposData: data.Bytes(),
+		},
+	}, nil
+}
+
+func PrintGroceriesList(user string, groceries []db.Grocery) ([]db.PrintJob, error) {
+	data := bytes.NewBuffer(nil)
+
+	sort.Slice(groceries, func(i, j int) bool {
+		return groceries[i].Item < groceries[j].Item
+	})
+
+	p, err := escpos.NewPrinterByRW(&bufferToRWC{
+		u: data,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	p.Init()       // start
+	p.Smooth(true) // use smootth printing
+	p.Size(2, 2)   // set font size
+	p.PrintLn("Groceries list")
+	p.Size(1, 1)
+	p.PrintLn("-------------------")
+	p.PrintLn("")
+
+	p.Size(2, 1)
+	for _, idea := range groceries {
+		p.Print("* ")
+		p.PrintLn(idea.Item)
 	}
 
 	p.PrintLn("")
