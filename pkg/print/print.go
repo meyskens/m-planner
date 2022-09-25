@@ -133,3 +133,40 @@ func PrintReminder(user string, text string) ([]db.PrintJob, error) {
 		},
 	}, nil
 }
+
+func PrintRoutine(user string, text, fact string) ([]db.PrintJob, error) {
+	data := bytes.NewBuffer(nil)
+
+	p, err := escpos.NewPrinterByRW(&bufferToRWC{
+		u: data,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	p.Init()       // start
+	p.Smooth(true) // use smootth printing
+
+	p.Size(2, 1)
+	p.Print(text)
+
+	if fact != "" {
+		p.PrintLn("-------------------")
+		p.PrintLn("")
+		p.PrintLn("Fun fact...")
+		p.PrintLn(fact)
+	}
+
+	p.PrintLn("")
+	p.PrintLn("")
+	p.Size(1, 1)
+	p.PrintLn("Powered by M-Planner")
+
+	return []db.PrintJob{
+		{
+			User:       user,
+			EscposData: data.Bytes(),
+		},
+	}, nil
+}

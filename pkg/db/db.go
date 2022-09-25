@@ -24,6 +24,8 @@ var tables = []interface{}{
 	Calendar{},
 	PrintJob{},
 	Grocery{},
+	Routine{},
+	RoutineReminder{},
 }
 
 type Validatable interface {
