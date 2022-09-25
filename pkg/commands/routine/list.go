@@ -50,7 +50,7 @@ func (r *RoutineCommands) listCommandInternal(s *discordgo.Session, i *discordgo
 	editors := []discordgo.SelectMenuOption{}
 	for _, daily := range routines {
 		e := embed.NewEmbed()
-		e.AddField("Description", daily.Description)
+		e.AddField("Description", shortenText(daily.Description, 30))
 		if daily.Message {
 			e.AddField("Should I Discord you?", "Yes")
 		} else {
@@ -64,12 +64,12 @@ func (r *RoutineCommands) listCommandInternal(s *discordgo.Session, i *discordgo
 		embeds = append(embeds, e.MessageEmbed)
 
 		deleters = append(deleters, discordgo.SelectMenuOption{
-			Label: fmt.Sprintf("Delete %q", daily.Description),
+			Label: fmt.Sprintf("Delete %q", shortenText(daily.Description, 30)),
 			Value: fmt.Sprintf("%d", daily.ID),
 		})
 
 		editors = append(editors, discordgo.SelectMenuOption{
-			Label: fmt.Sprintf("Edit %q", daily.Description),
+			Label: fmt.Sprintf("Edit %q", shortenText(daily.Description, 30)),
 			Value: fmt.Sprintf("%d", daily.ID),
 		})
 	}
@@ -183,4 +183,11 @@ func (r *RoutineCommands) listDeleteCommand(s *discordgo.Session, i *discordgo.I
 	}
 
 	r.listCommandInternal(s, i, discordgo.InteractionResponseUpdateMessage, 0)
+}
+
+func shortenText(text string, length int) string {
+	if len(text) > length {
+		return text[:length] + "..."
+	}
+	return text
 }
