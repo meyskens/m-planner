@@ -7,6 +7,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meyskens/m-planner/pkg/db"
+	printlib "github.com/meyskens/m-planner/pkg/print"
 	"github.com/multiplay/go-cticker"
 	"gorm.io/gorm/clause"
 )
@@ -134,6 +135,18 @@ func (d *DailyCommands) remindEvents(dg *discordgo.Session) {
 					MessageID:            msg.ID,
 				}); tx.Error != nil {
 					log.Printf("error saving sent message ID: %s", tx.Error)
+				}
+			}
+
+			if event.Daily.Print && event.SnoozedTill.IsZero() {
+				pd, err := printlib.PrintReminder(event.Daily.User, fmt.Sprintf("Don't forget to %s", event.Daily.Description))
+				if err != nil {
+					log.Printf("error printing reminder: %s", err)
+				}
+				for _, pd := range pd {
+					if err := d.db.Create(&pd).Error; err != nil {
+						log.Printf("error saving print data: %s", err)
+					}
 				}
 			}
 

@@ -147,6 +147,11 @@ func (id *DailyCommands) changeCommand(s *discordgo.Session, i *discordgo.Intera
 		annoying = "yes"
 	}
 
+	print := "no"
+	if dbDaily.Print {
+		print = "yes"
+	}
+
 	err = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseModal,
 		Data: &discordgo.InteractionResponseData{
@@ -204,6 +209,19 @@ func (id *DailyCommands) changeCommand(s *discordgo.Session, i *discordgo.Intera
 						},
 					},
 				},
+				discordgo.ActionsRow{
+					Components: []discordgo.MessageComponent{
+						discordgo.TextInput{
+							Label:     "Should I print a reminder? (yes/no)",
+							CustomID:  "print",
+							MaxLength: 3,
+							MinLength: 2,
+							Required:  true,
+							Style:     discordgo.TextInputShort,
+							Value:     print,
+						},
+					},
+				},
 			},
 		},
 	})
@@ -256,6 +274,7 @@ func (d *DailyCommands) modalReturnCommand(s *discordgo.Session, i *discordgo.In
 	weekTime := strings.Split(data.Components[1].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value, ":")
 	weekendTime := strings.Split(data.Components[2].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value, ":")
 	dbDaily.Annoying = strings.ToLower(data.Components[3].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value) == "yes"
+	dbDaily.Print = strings.ToLower(data.Components[4].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value) == "yes"
 
 	for j := range dbDaily.Reminders {
 		if dbDaily.Reminders[j].Weekday == time.Monday {
