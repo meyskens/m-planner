@@ -143,11 +143,12 @@ func PrintRoutine(user string, text, fact string) ([]db.PrintJob, error) {
 	}
 	p.Smooth(true) // use smootth printing
 
-	p.Size(2, 1)
-	p.Print(text)
+	p.Size(1, 1)
+	p.PrintLn(text)
 
 	if fact != "" {
 		p.PrintLn("-------------------")
+		p.Size(1, 1)
 		p.PrintLn("")
 		p.PrintLn("Fun fact...")
 		p.PrintLn(fact)
