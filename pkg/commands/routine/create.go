@@ -217,26 +217,13 @@ func (r *RoutineCommands) changeCommand(s *discordgo.Session, i *discordgo.Inter
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{
 						discordgo.TextInput{
-							Label:     "Should I print a reminder? (yes/no)",
+							Label:     "Should I print a reminder? Add fun fact?",
 							CustomID:  "print",
-							MaxLength: 3,
-							MinLength: 2,
+							MaxLength: 7,
+							MinLength: 5,
 							Required:  true,
 							Style:     discordgo.TextInputShort,
-							Value:     print,
-						},
-					},
-				},
-				discordgo.ActionsRow{
-					Components: []discordgo.MessageComponent{
-						discordgo.TextInput{
-							Label:     "Should I print a fun fact? (yes/no)",
-							CustomID:  "funfact",
-							MaxLength: 3,
-							MinLength: 2,
-							Required:  true,
-							Style:     discordgo.TextInputShort,
-							Value:     funfact,
+							Value:     print + "/" + funfact,
 						},
 					},
 				},
@@ -292,8 +279,8 @@ func (r *RoutineCommands) modalReturnCommand(s *discordgo.Session, i *discordgo.
 	weekTime := strings.Split(data.Components[1].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value, ":")
 	weekendTime := strings.Split(data.Components[2].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value, ":")
 	dbRoutine.Message = strings.ToLower(data.Components[3].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value) == "yes"
-	dbRoutine.Print = strings.ToLower(data.Components[4].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value) == "yes"
-	dbRoutine.FunFact = strings.ToLower(data.Components[5].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value) == "yes"
+	dbRoutine.Print = strings.Split(strings.ToLower(data.Components[4].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value), "/")[0] == "yes"
+	dbRoutine.FunFact = strings.Split(strings.ToLower(data.Components[4].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value), "/")[1] == "yes"
 
 	for j := range dbRoutine.Reminders {
 		if dbRoutine.Reminders[j].Weekday == time.Monday {
