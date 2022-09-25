@@ -35,7 +35,6 @@ func PrintIdeaList(user string, ideas []db.Idea) ([]db.PrintJob, error) {
 		return nil, err
 	}
 
-	p.Init()       // start
 	p.Smooth(true) // use smootth printing
 	p.Size(2, 2)   // set font size
 	p.PrintLn("Ideas list")
@@ -77,7 +76,6 @@ func PrintGroceriesList(user string, groceries []db.Grocery) ([]db.PrintJob, err
 		return nil, err
 	}
 
-	p.Init()       // start
 	p.Smooth(true) // use smootth printing
 	p.Size(2, 2)   // set font size
 	p.PrintLn("Groceries list")
@@ -115,7 +113,6 @@ func PrintReminder(user string, text string) ([]db.PrintJob, error) {
 		return nil, err
 	}
 
-	p.Init()       // start
 	p.Smooth(true) // use smootth printing
 
 	p.Size(2, 1)
@@ -144,8 +141,6 @@ func PrintRoutine(user string, text, fact string) ([]db.PrintJob, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	p.Init()       // start
 	p.Smooth(true) // use smootth printing
 
 	p.Size(2, 1)
