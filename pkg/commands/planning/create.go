@@ -196,7 +196,7 @@ func (p *PlanningCommands) changeCommand(s *discordgo.Session, i *discordgo.Inte
 					Components: []discordgo.MessageComponent{
 						discordgo.TextInput{
 							Label:     "Should I print it out? (yes/no)",
-							CustomID:  "annoying",
+							CustomID:  "print",
 							MaxLength: 3,
 							MinLength: 2,
 							Required:  true,
