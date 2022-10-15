@@ -61,7 +61,7 @@ func (p *PlanningCommands) InstallSlashCommands(session *discordgo.Session) erro
 					Type:        discordgo.ApplicationCommandOptionBoolean,
 					Name:        "annoying",
 					Description: "Should I annoy you till you did it?",
-					Required:    false,
+					Required:    true,
 				},
 				{
 					Type:        discordgo.ApplicationCommandOptionBoolean,
