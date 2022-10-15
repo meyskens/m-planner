@@ -98,7 +98,7 @@ func (p *PrintCommands) printCommand(s *discordgo.Session, i *discordgo.Interact
 	}
 
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseUpdateMessage,
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: "I will print this!",
 		},
