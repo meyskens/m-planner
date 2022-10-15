@@ -7,6 +7,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meyskens/m-planner/pkg/db"
+	printlib "github.com/meyskens/m-planner/pkg/print"
 	"github.com/multiplay/go-cticker"
 )
 
@@ -89,6 +90,18 @@ func (p *PlanningCommands) remindEvents(now time.Time, dg *discordgo.Session) {
 
 			if err != nil {
 				fmt.Println(err)
+			}
+
+			if plan.Print && plan.SnoozedTill.IsZero() {
+				pd, err := printlib.PrintReminder(plan.User, fmt.Sprintf("Don't forget to %s", plan.Description))
+				if err != nil {
+					log.Printf("error printing reminder: %s", err)
+				}
+				for _, pd := range pd {
+					if err := d.db.Create(&pd).Error; err != nil {
+						log.Printf("error saving print data: %s", err)
+					}
+				}
 			}
 
 			if !plan.Annoying {

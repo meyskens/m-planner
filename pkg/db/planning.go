@@ -12,6 +12,7 @@ type Plan struct {
 	Description string
 	ChannelID   string
 	Annoying    bool // should the bot bother the user a lot...
+	Print       bool // should the alert be sent to the printer
 
 	Start       time.Time
 	SnoozedTill time.Time

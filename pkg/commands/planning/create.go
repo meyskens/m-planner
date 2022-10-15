@@ -18,6 +18,7 @@ func (p *PlanningCommands) registerCommand(s *discordgo.Session, i *discordgo.In
 	desc := ""
 	timeStr := ""
 	annoying := false
+	print := false
 
 	if len(i.ApplicationCommandData().Options) > 0 {
 		if str, ok := i.ApplicationCommandData().Options[0].Value.(string); ok {
@@ -28,6 +29,9 @@ func (p *PlanningCommands) registerCommand(s *discordgo.Session, i *discordgo.In
 		}
 		if b, ok := i.ApplicationCommandData().Options[2].Value.(bool); ok {
 			annoying = b
+		}
+		if b, ok := i.ApplicationCommandData().Options[3].Value.(bool); ok {
+			print = b
 		}
 	}
 
@@ -49,6 +53,7 @@ func (p *PlanningCommands) registerCommand(s *discordgo.Session, i *discordgo.In
 		ChannelID:   i.ChannelID,
 		Annoying:    annoying,
 		Start:       t,
+		Print:       print,
 	}
 
 	if tx := p.db.Save(&dbPlan); tx.Error != nil {
@@ -137,6 +142,10 @@ func (p *PlanningCommands) changeCommand(s *discordgo.Session, i *discordgo.Inte
 	if dbPlan.Annoying {
 		annoying = "yes"
 	}
+	print := "no"
+	if dbPlan.Print {
+		print = "yes"
+	}
 
 	loc, _ := time.LoadLocation("Europe/Brussels")
 
@@ -180,6 +189,19 @@ func (p *PlanningCommands) changeCommand(s *discordgo.Session, i *discordgo.Inte
 							Required:  true,
 							Style:     discordgo.TextInputShort,
 							Value:     annoying,
+						},
+					},
+				},
+				discordgo.ActionsRow{
+					Components: []discordgo.MessageComponent{
+						discordgo.TextInput{
+							Label:     "Should I print it out? (yes/no)",
+							CustomID:  "annoying",
+							MaxLength: 3,
+							MinLength: 2,
+							Required:  true,
+							Style:     discordgo.TextInputShort,
+							Value:     print,
 						},
 					},
 				},
@@ -235,6 +257,7 @@ func (p *PlanningCommands) modalReturnCommand(s *discordgo.Session, i *discordgo
 	dbPlan.Description = data.Components[0].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value
 	dbPlan.Start = parseTime(data.Components[1].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value)
 	dbPlan.Annoying = strings.ToLower(data.Components[2].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value) == "yes"
+	dbPlan.Print = strings.ToLower(data.Components[3].(*discordgo.ActionsRow).Components[0].(*discordgo.TextInput).Value) == "yes"
 
 	if tx := p.db.Save(&dbPlan); tx.Error != nil {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
