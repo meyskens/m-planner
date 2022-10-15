@@ -166,3 +166,31 @@ func PrintRoutine(user string, text, fact string) ([]db.PrintJob, error) {
 		},
 	}, nil
 }
+
+func PrintText(user string, text string) ([]db.PrintJob, error) {
+	data := bytes.NewBuffer(nil)
+
+	p, err := escpos.NewPrinterByRW(&bufferToRWC{
+		u: data,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	p.Smooth(true) // use smootth printing
+	p.Size(2, 2)   // set font size
+	p.PrintLn(text)
+
+	p.PrintLn("")
+	p.PrintLn("")
+	p.Size(1, 1)
+	p.PrintLn("Powered by M-Planner")
+
+	return []db.PrintJob{
+		{
+			User:       user,
+			EscposData: data.Bytes(),
+		},
+	}, nil
+}
