@@ -98,7 +98,7 @@ func (p *PlanningCommands) remindEvents(now time.Time, dg *discordgo.Session) {
 					log.Printf("error printing reminder: %s", err)
 				}
 				for _, pd := range pd {
-					if err := d.db.Create(&pd).Error; err != nil {
+					if err := p.db.Create(&pd).Error; err != nil {
 						log.Printf("error saving print data: %s", err)
 					}
 				}
