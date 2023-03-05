@@ -27,11 +27,15 @@ func (p *PlanningCommands) registerCommand(s *discordgo.Session, i *discordgo.In
 		if str, ok := i.ApplicationCommandData().Options[1].Value.(string); ok {
 			timeStr = str
 		}
-		if b, ok := i.ApplicationCommandData().Options[2].Value.(bool); ok {
-			annoying = b
+		if len(i.ApplicationCommandData().Options) > 2 {
+			if b, ok := i.ApplicationCommandData().Options[2].Value.(bool); ok {
+				annoying = b
+			}
 		}
-		if b, ok := i.ApplicationCommandData().Options[3].Value.(bool); ok {
-			print = b
+		if len(i.ApplicationCommandData().Options) > 3 {
+			if b, ok := i.ApplicationCommandData().Options[3].Value.(bool); ok {
+				print = b
+			}
 		}
 	}
 
