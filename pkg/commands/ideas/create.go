@@ -56,7 +56,7 @@ func (id *IdeasCommands) registerCommand(s *discordgo.Session, i *discordgo.Inte
 							Label:    "Delete",
 							Style:    discordgo.DangerButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "🗑️",
 							},
 							CustomID: fmt.Sprintf("delete_idea--%d", dbIdea.ID),

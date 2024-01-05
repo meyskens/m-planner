@@ -70,7 +70,7 @@ func (r *RoutineCommands) registerCommand(s *discordgo.Session, i *discordgo.Int
 							Label:    "Configure",
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "⚙️",
 							},
 							CustomID: fmt.Sprintf("change_routine--%d", dbRoutine.ID),
@@ -323,7 +323,7 @@ func (r *RoutineCommands) modalReturnCommand(s *discordgo.Session, i *discordgo.
 							Label:    "Configure",
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "⚙️",
 							},
 							CustomID: fmt.Sprintf("change_routine--%d", dbRoutine.ID),

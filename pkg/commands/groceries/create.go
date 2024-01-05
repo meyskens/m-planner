@@ -55,7 +55,7 @@ func (id *GroceriesCommands) registerCommand(s *discordgo.Session, i *discordgo.
 							Label:    "Delete",
 							Style:    discordgo.DangerButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "🗑️",
 							},
 							CustomID: fmt.Sprintf("delete_grocery--%d", dbGrocery.ID),

@@ -98,7 +98,7 @@ func (id *GroceriesCommands) listCommandInternal(s *discordgo.Session, i *discor
 				Label:    "Previous page",
 				Style:    discordgo.SecondaryButton,
 				CustomID: fmt.Sprintf("ideas--%d", start-10),
-				Emoji: discordgo.ComponentEmoji{
+				Emoji: &discordgo.ComponentEmoji{
 					Name: "⏮️",
 				},
 			})
@@ -108,7 +108,7 @@ func (id *GroceriesCommands) listCommandInternal(s *discordgo.Session, i *discor
 				Label:    "Next page",
 				Style:    discordgo.SecondaryButton,
 				CustomID: fmt.Sprintf("ideas--%d", start+10),
-				Emoji: discordgo.ComponentEmoji{
+				Emoji: &discordgo.ComponentEmoji{
 					Name: "⏭️",
 				},
 			})
@@ -139,7 +139,7 @@ func (id *GroceriesCommands) listCommandInternal(s *discordgo.Session, i *discor
 					Label:    "Delete all",
 					Style:    discordgo.DangerButton,
 					Disabled: false,
-					Emoji: discordgo.ComponentEmoji{
+					Emoji: &discordgo.ComponentEmoji{
 						Name: "🗑️",
 					},
 					CustomID: "delete_grocery--all",

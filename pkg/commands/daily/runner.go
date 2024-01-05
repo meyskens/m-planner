@@ -111,7 +111,7 @@ func (d *DailyCommands) remindEvents(dg *discordgo.Session) {
 						discordgo.Button{
 							Label: "I did it!",
 							Style: discordgo.SuccessButton,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "💖",
 							},
 							CustomID: fmt.Sprintf("mark_event_complete--%d", event.ID),

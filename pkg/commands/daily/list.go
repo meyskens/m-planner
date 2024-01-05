@@ -76,7 +76,7 @@ func (id *DailyCommands) listCommandInternal(s *discordgo.Session, i *discordgo.
 				Label:    "Previous page",
 				Style:    discordgo.SecondaryButton,
 				CustomID: fmt.Sprintf("dailys--%d", start-10),
-				Emoji: discordgo.ComponentEmoji{
+				Emoji: &discordgo.ComponentEmoji{
 					Name: "⏮️",
 				},
 			})
@@ -86,7 +86,7 @@ func (id *DailyCommands) listCommandInternal(s *discordgo.Session, i *discordgo.
 				Label:    "Next page",
 				Style:    discordgo.SecondaryButton,
 				CustomID: fmt.Sprintf("dailys--%d", start+10),
-				Emoji: discordgo.ComponentEmoji{
+				Emoji: &discordgo.ComponentEmoji{
 					Name: "⏭️",
 				},
 			})

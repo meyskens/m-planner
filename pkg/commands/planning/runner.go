@@ -72,7 +72,7 @@ func (p *PlanningCommands) remindEvents(now time.Time, dg *discordgo.Session) {
 						discordgo.Button{
 							Label: "I did it!",
 							Style: discordgo.SuccessButton,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "💖",
 							},
 							CustomID: fmt.Sprintf("mark_planning_complete--%d", plan.ID),

@@ -82,7 +82,7 @@ func (p *PlanningCommands) registerCommand(s *discordgo.Session, i *discordgo.In
 							Label:    "Configure",
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "⚙️",
 							},
 							CustomID: fmt.Sprintf("change_planning--%d", dbPlan.ID),
@@ -283,7 +283,7 @@ func (p *PlanningCommands) modalReturnCommand(s *discordgo.Session, i *discordgo
 							Label:    "Configure",
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "⚙️",
 							},
 							CustomID: fmt.Sprintf("change_planning--%d", dbPlan.ID),

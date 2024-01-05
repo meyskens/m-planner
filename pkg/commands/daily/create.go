@@ -70,7 +70,7 @@ func (d *DailyCommands) registerCommand(s *discordgo.Session, i *discordgo.Inter
 							Label:    "Configure",
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "⚙️",
 							},
 							CustomID: fmt.Sprintf("change_daily--%d", dbIdea.ID),
@@ -317,7 +317,7 @@ func (d *DailyCommands) modalReturnCommand(s *discordgo.Session, i *discordgo.In
 							Label:    "Configure",
 							Style:    discordgo.SuccessButton,
 							Disabled: false,
-							Emoji: discordgo.ComponentEmoji{
+							Emoji: &discordgo.ComponentEmoji{
 								Name: "⚙️",
 							},
 							CustomID: fmt.Sprintf("change_daily--%d", dbDaily.ID),
