@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/arran4/golang-ical v0.0.0-20220517104411-fd89fefb0182
 	github.com/bwmarrin/discordgo v0.27.2-0.20240104191117-afc57886f91a
-	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+	github.com/golang/glog v1.2.4
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/mect/go-escpos v0.0.0-20220828123455-e3ea418fc954
 	github.com/meyskens/go-recycle-belgium v0.0.0-20220801163756-cf2a1d54fda5
